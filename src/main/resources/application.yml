@@ -12,6 +12,12 @@ spring:
           - Path=/api/products/**
         filters:
           - StripPrefix=2
+          - ProductsC=sbms-msg using shortcut, sbms, v1-ms-gateway-srv_sbm-cloud
+          #- name: Example
+          #  args: 
+          #    msg: sbms-msg related to the cookie from the gateway
+          #    cookieName: sbms
+          #    cookieValue: v1-ms-gateway-srv_sbm-cloud
       - id: ms-items-svc
         uri: lb://ms-items-svc
         predicates:
