@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: ms-gateway-srv
+  profiles:
+    active: default
+  cloud:
+    gateway:
+      routes:
+      - id: ms-products-svc
+        uri: lb://ms-products-svc
+        predicates:
+          - Path=/api/products/**
+        filters:
+          - StripPrefix=2
+          - ProductsC=sbms-msg using shortcut, sbms, v1-ms-gateway-srv_sbm-cloud
+          #- name: Example
+          #  args: 
+          #    msg: sbms-msg related to the cookie from the gateway
+          #    cookieName: sbms
+          #    cookieValue: v1-ms-gateway-srv_sbm-cloud
+      - id: ms-items-svc
+        uri: lb://ms-items-svc
+        predicates:
+          - Path=/api/items/**
+        filters:
+          - StripPrefix=2
+          - AddRequestHeader=token-request, 123456
+          - AddResponseHeader=token-response, 654321
+
+server:
+  port: 8003
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} 
+  client:
+    service-url:
+      defaultZone: http://eurekasrv.dsbms.lomosrv.com:8761/eureka
