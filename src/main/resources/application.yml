@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: ms-gateway-srv
+  profiles:
+    active: default
+  cloud:
+    gateway:
+      routes:
+      - id: ms-products-svc
+        uri: lb://ms-products-svc
+        predicates:
+          - Path=/api/products/**
+        filters:
+          - StripPrefix=2
+      - id: ms-items-svc
+        uri: lb://ms-items-svc
+        predicates:
+          - Path=/api/items/**
+        filters:
+          - StripPrefix=2
+
+server:
+  port: 8003
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} 
+  client:
+    service-url:
+      defaultZone: http://eurekasrv.dsbms.lomosrv.com:8761/eureka
